@@ -22,26 +22,10 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(cookieParser());
 
 //All routes
-const { eventRouter } = require("./routes/event.routes");
+const { eventRouter } = require("./routes/event.route");
+const userRouter = require("./routes/user.route");
 
+app.use("/api/v1/user", userRouter);
 app.use("/api/v1/event", eventRouter);
-
-// app.get("/", (req, res, next) => {
-//     return res.status(200).json({
-//         message: "Hello from root!",
-//     });
-// });
-
-// app.get("/path", (req, res, next) => {
-//     return res.status(200).json({
-//         message: "Hello from path!",
-//     });
-// });
-
-// app.use((req, res, next) => {
-//     return res.status(404).json({
-//         error: "Not Found",
-//     });
-// });
 
 module.exports = app;
