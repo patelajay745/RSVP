@@ -6,7 +6,7 @@ const {
     loginUser,
     logoutUser,
     refreshAccessToken,
-    // changeCurrentPassword,
+    changeCurrentPassword,
     getCurrentUser,
 } = require("../controller/user.controller");
 

@@ -180,11 +180,35 @@ const refreshAccessToken = asynHandler(async (req, res) => {
         );
 });
 
+const changeCurrentPassword = asynHandler(async (req, res) => {
+    const { newPassword } = req.body;
+
+    if (!newPassword) {
+        throw new ApiError(400, "Please provide new Password");
+    }
+
+    const updateUser = await User.findByIdAndUpdate(
+        { _id: req.user._id },
+        {
+            $set: { password: newPassword },
+        },
+        {
+            new: true,
+        }
+    ).select("-refreshToken -__v -createdAt -updatedAt -password");
+
+    console.log(updateUser);
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, updateUser, "Password has been updated"));
+});
+
 module.exports = {
     registerUser,
     loginUser,
     logoutUser,
-    // changeCurrentPassword,
+    changeCurrentPassword,
     refreshAccessToken,
     getCurrentUser,
 };
