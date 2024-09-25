@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(cookieParser());
 
 //All routes
-const { eventRouter } = require("./routes/event.route");
+const eventRouter = require("./routes/event.route");
 const userRouter = require("./routes/user.route");
 
 app.use("/api/v1/user", userRouter);

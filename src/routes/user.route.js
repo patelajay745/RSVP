@@ -11,10 +11,13 @@ const {
 } = require("../controller/user.controller");
 
 router.post("/", registerUser);
-router.get("/", verifyJWt, getCurrentUser);
 router.post("/login", loginUser);
-router.post("/logout", verifyJWt, logoutUser);
 router.post("/refresh-token", refreshAccessToken);
-router.post("/change-password", verifyJWt, changeCurrentPassword);
+
+//secured-endpoints
+router.use(verifyJWt);
+router.post("/logout", logoutUser);
+router.get("/", getCurrentUser);
+router.post("/change-password", changeCurrentPassword);
 
 module.exports = router;
