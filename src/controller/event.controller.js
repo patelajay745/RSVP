@@ -64,6 +64,79 @@ const createEvent = asynHandler(async (req, res) => {
         .json(new ApiResponse(200, createdEvent, "Event has been created"));
 });
 
+const deleteEvent = asynHandler(async (req, res) => {
+    const { eventId } = req.params;
+    if (!eventId) {
+        throw new ApiError(400, "Please provide EventId");
+    }
+
+    const event = await Event.findOne({ _id: eventId });
+
+    if (!event) {
+        throw new ApiError(400, "No event found with this EventId");
+    }
+
+    if (!event.createdBy.equals(req.user._id)) {
+        throw new ApiError(401, "Not Authorized");
+    }
+
+    const deletedEvent = await Event.findOneAndDelete({ _id: eventId });
+
+    if (!deletedEvent) {
+        throw new ApiError(500, "Something went wrong while deleting event");
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, {}, "Event has beeen deleted"));
+});
+
+const toggelPublishedClosed = asynHandler(async (req, res) => {
+    const { eventId } = req.params;
+
+    if (!eventId) {
+        throw new ApiError(400, "Please provide EventId");
+    }
+
+    const event = await Event.findOne({ _id: eventId });
+
+    if (!event) {
+        throw new ApiError(400, "No event found with this EventId");
+    }
+
+    if (!event.createdBy.equals(req.user._id)) {
+        throw new ApiError(401, "Not Authorized");
+    }
+
+    let changedTo = event.status == "published" ? "closed" : "published";
+
+    const updatedEvent = await Event.findByIdAndUpdate(
+        { _id: eventId },
+        {
+            $set: {
+                status: changedTo,
+            },
+        },
+        { new: true }
+    );
+
+    if (!updatedEvent) {
+        throw new ApiError(500, "Something went wrong");
+    }
+
+    const response = {
+        id: updatedEvent._id,
+        eventName: updatedEvent.eventName,
+        status: updatedEvent.status,
+    };
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, response, "Event has been updated"));
+});
+
 module.exports = {
     createEvent,
+    deleteEvent,
+    toggelPublishedClosed,
 };
