@@ -135,8 +135,87 @@ const toggelPublishedClosed = asynHandler(async (req, res) => {
         .json(new ApiResponse(200, response, "Event has been updated"));
 });
 
+const listAllEvents = asynHandler(async (req, res) => {
+    const userID = req.user?._id;
+
+    const events = await Event.find({ createdBy: userID });
+
+    if (!events) {
+        throw new ApiError(400, "No Events found");
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, events, "Events are fetched"));
+});
+
+const getEvent = asynHandler(async (req, res) => {
+    const { eventId } = req.params;
+
+    if (!eventId) {
+        throw new ApiError(400, "Please provide eventId");
+    }
+
+    const event = await Event.findOne({
+        _id: eventId,
+        createdBy: req.user._id,
+    }).select("-createdBy -createdAt -updatedAt -__v");
+
+    if (!event) {
+        throw new ApiError(401, "unAuthorized");
+    }
+    console.log(event);
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, event, "Event has been fetched"));
+});
+
+const updateEvent = asynHandler(async (req, res) => {
+    //TODO: update Image logic
+    const {
+        eventName,
+        startDate,
+        startTime,
+        endDate,
+        endTime,
+        timezone,
+        venueAddress,
+        venueName,
+    } = req.body;
+
+    const { eventId } = req.params;
+
+    const event = await Event.findOne({
+        _id: eventId,
+        createdBy: req.user?._id,
+    });
+
+    if (!event) {
+        throw new ApiError(401, unAthorized);
+    }
+
+    if (eventName !== undefined) event.eventName = eventName;
+    if (startDate !== undefined) event.startDate = startDate;
+    if (startTime !== undefined) event.startTime = startTime;
+    if (endDate !== undefined) event.endDate = endDate;
+    if (endTime !== undefined) event.endTime = endTime;
+    if (timezone !== undefined) event.timezone = timezone;
+    if (venueAddress !== undefined) event.venueAddress = venueAddress;
+    if (venueName !== undefined) event.venueName = venueName;
+
+    await event.save();
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, event, "Event has been updated"));
+});
+
 module.exports = {
     createEvent,
     deleteEvent,
     toggelPublishedClosed,
+    listAllEvents,
+    getEvent,
+    updateEvent,
 };

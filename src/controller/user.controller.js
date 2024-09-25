@@ -187,21 +187,14 @@ const changeCurrentPassword = asynHandler(async (req, res) => {
         throw new ApiError(400, "Please provide new Password");
     }
 
-    const updateUser = await User.findByIdAndUpdate(
-        { _id: req.user._id },
-        {
-            $set: { password: newPassword },
-        },
-        {
-            new: true,
-        }
-    ).select("-refreshToken -__v -createdAt -updatedAt -password");
+    const user = await User.findById(req.user?._id);
+    user.password = newPassword;
 
-    console.log(updateUser);
+    await user.save({ validateBeforeSave: false });
 
     return res
         .status(200)
-        .json(new ApiResponse(200, updateUser, "Password has been updated"));
+        .json(new ApiResponse(200, {}, "Password has been updated"));
 });
 
 module.exports = {
