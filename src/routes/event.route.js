@@ -7,6 +7,7 @@ const {
     getEvent,
     updateEvent,
     getEventByShortUrl,
+    getAttendies,
 } = require("../controller/event.controller");
 const { verifyJWt } = require("../middleware/auth.middleware");
 
@@ -24,5 +25,7 @@ router.delete("/:eventId", deleteEvent);
 
 router.patch("/:eventId", updateEvent);
 router.patch("/e/:eventId", toggelPublishedClosed);
+
+router.get("/f/:eventId", getAttendies);
 
 module.exports = router;

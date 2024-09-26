@@ -18,7 +18,7 @@ const createFamily = asynHandler(async (req, res) => {
     }
 
     const family = await Family.create({
-        eventId,
+        event: eventId,
         firstName,
         lastName,
         email,

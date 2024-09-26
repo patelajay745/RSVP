@@ -2,6 +2,8 @@
 const { ApiError } = require("../utils/ApiError");
 const { ApiResponse } = require("../utils/ApiResponse");
 const { Event } = require("../models/event.model");
+const { Family } = require("../models/family.model");
+const { RSVPGuest } = require("../models/rsvpguest.model");
 const { asynHandler } = require("../utils/asyncHandler");
 
 const createEvent = asynHandler(async (req, res) => {
@@ -231,6 +233,69 @@ const getEventByShortUrl = asynHandler(async (req, res) => {
         .json(new ApiResponse(200, event, "Event has been fetched"));
 });
 
+const getAttendies = asynHandler(async (req, res) => {
+    const { eventId } = req.params;
+    if (!eventId) {
+        throw new ApiError(400, "Please provide eventId");
+    }
+    const event = await Event.findById(eventId);
+    if (!event) {
+        throw new ApiError(400, "No event found with this eventId");
+    }
+
+    const families = await Family.find({ event: eventId });
+
+    if (!families) {
+        throw new ApiError(400, "No families found with this eventId");
+    }
+
+    // Initialize counters and arrays
+    let attendingCount = 0;
+    let notAttendingCount = 0;
+    const attendingFamilies = [];
+    const notAttendingFamilies = [];
+
+    for (const family of families) {
+        const familyAttending = family.numAttendees > 0;
+
+        // Prepare the family object
+        const familyObj = {
+            firstName: family.firstName,
+            lastName: family.lastName,
+            guests: !familyAttending ? 0 : [],
+        };
+
+        // Fetch and add the RSVP guests
+        const guests = await RSVPGuest.find({ familyId: family._id });
+        for (const guest of guests) {
+            familyObj.guests.push({
+                firstName: guest.firstName,
+                lastName: guest.lastName,
+            });
+        }
+
+        // Add the family to the appropriate array
+        if (familyAttending) {
+            attendingCount += family.numAttendees;
+            attendingFamilies.push(familyObj);
+        } else {
+            notAttendingCount++;
+            notAttendingFamilies.push(familyObj);
+        }
+    }
+
+    const data = {
+        attendingFamilies,
+        notAttendingFamilies,
+        attendingCount,
+        notAttendingCount,
+    };
+
+    res.status(200).json(
+        new ApiResponse(200, data, "Attendies has been fetched")
+    );
+});
+
 module.exports = {
     createEvent,
     deleteEvent,
@@ -239,4 +304,5 @@ module.exports = {
     getEvent,
     updateEvent,
     getEventByShortUrl,
+    getAttendies,
 };
