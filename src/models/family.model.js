@@ -19,6 +19,10 @@ const familySchema = new Schema(
             type: Number,
             default: 0,
         },
+        event: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Event",
+        },
     },
     { timestamps: true }
 );

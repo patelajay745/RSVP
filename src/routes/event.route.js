@@ -6,16 +6,19 @@ const {
     listAllEvents,
     getEvent,
     updateEvent,
+    getEventByShortUrl,
 } = require("../controller/event.controller");
 const { verifyJWt } = require("../middleware/auth.middleware");
 
 const router = Router();
 
+router.get("/:shortUrl", getEventByShortUrl);
+
 router.use(verifyJWt);
 router.post("/", createEvent);
 
 router.get("/", listAllEvents);
-router.get("/:eventId", getEvent);
+router.get("/e/:eventId", getEvent);
 
 router.delete("/:eventId", deleteEvent);
 

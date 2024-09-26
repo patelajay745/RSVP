@@ -24,8 +24,10 @@ app.use(cookieParser());
 //All routes
 const eventRouter = require("./routes/event.route");
 const userRouter = require("./routes/user.route");
+const familyRouter = require("./routes/family.route");
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/event", eventRouter);
+app.use("/api/v1/family", familyRouter);
 
 module.exports = app;

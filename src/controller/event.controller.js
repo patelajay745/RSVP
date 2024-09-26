@@ -211,6 +211,26 @@ const updateEvent = asynHandler(async (req, res) => {
         .json(new ApiResponse(200, event, "Event has been updated"));
 });
 
+const getEventByShortUrl = asynHandler(async (req, res) => {
+    const { shortUrl } = req.params;
+
+    if (!shortUrl) {
+        throw new ApiError(400, "Please provide shortUrl");
+    }
+
+    const event = await Event.findOne({ shortUrl }).select(
+        "-createdAt -updatedAt -__v"
+    );
+
+    if (!event) {
+        throw new ApiError(400, "No event found with this shortUrl");
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, event, "Event has been fetched"));
+});
+
 module.exports = {
     createEvent,
     deleteEvent,
@@ -218,4 +238,5 @@ module.exports = {
     listAllEvents,
     getEvent,
     updateEvent,
+    getEventByShortUrl,
 };
