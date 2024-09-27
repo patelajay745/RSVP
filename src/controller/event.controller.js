@@ -5,6 +5,7 @@ const { Event } = require("../models/event.model");
 const { Family } = require("../models/family.model");
 const { RSVPGuest } = require("../models/rsvpguest.model");
 const { asynHandler } = require("../utils/asyncHandler");
+const { s3Uploadv3 } = require("../utils/multerUpload");
 
 const createEvent = asynHandler(async (req, res) => {
     const {
@@ -35,7 +36,10 @@ const createEvent = asynHandler(async (req, res) => {
         throw new ApiError(400, "Please provide All required fields");
     }
 
-    console.log(new Date(startDate).toISOString().split("T")[0]);
+    console.log("urllllllllll", req.files);
+    const results = await s3Uploadv3(req.files);
+    console.log(results);
+
     const event = {
         eventName,
         startDate: new Date(startDate).toISOString().split("T")[0], // This will store only the date part (YYYY-MM-DD)
