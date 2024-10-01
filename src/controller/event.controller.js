@@ -5,7 +5,7 @@ const { Event } = require("../models/event.model");
 const { Family } = require("../models/family.model");
 const { RSVPGuest } = require("../models/rsvpguest.model");
 const { asynHandler } = require("../utils/asyncHandler");
-const { s3Uploadv3 } = require("../utils/multerUpload");
+const { uploadOnS3 } = require("../utils/imageUpload");
 
 const createEvent = asynHandler(async (req, res) => {
     const {
@@ -17,7 +17,6 @@ const createEvent = asynHandler(async (req, res) => {
         timezone,
         venueName,
         venueAddress,
-        themephoto,
     } = req.body;
 
     if (
@@ -30,15 +29,18 @@ const createEvent = asynHandler(async (req, res) => {
             timezone,
             venueName,
             venueAddress,
-            themephoto,
         ].some((field) => field.trim() == "")
     ) {
         throw new ApiError(400, "Please provide All required fields");
     }
 
-    console.log("urllllllllll", req.files);
-    const results = await s3Uploadv3(req.files);
-    console.log(results);
+    const { err, themephoto } = await uploadOnS3(req.file);
+
+    console.log(themephoto);
+
+    if (err) {
+        throw new ApiError(500, "Something went wrong while uploading image");
+    }
 
     const event = {
         eventName,
@@ -49,7 +51,7 @@ const createEvent = asynHandler(async (req, res) => {
         timezone,
         venueName,
         venueAddress,
-        themephoto,
+        themephoto: themephoto,
         createdBy: req.user?._id,
     };
 

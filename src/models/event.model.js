@@ -39,7 +39,6 @@ const eventSchema = new Schema(
         },
         themephoto: {
             type: String,
-            required: true,
         },
         createdBy: {
             type: mongoose.Schema.Types.ObjectId,

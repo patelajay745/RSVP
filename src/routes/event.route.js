@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { upload } = require("../utils/multerUpload");
+const { upload } = require("../middleware/multer");
 const {
     createEvent,
     deleteEvent,
@@ -17,11 +17,7 @@ const router = Router();
 router.get("/:shortUrl", getEventByShortUrl);
 
 router.use(verifyJWt);
-router.post(
-    "/",
-    upload.single({ name: "themephoto", maxCount: 1 }),
-    createEvent
-);
+router.post("/", upload.single("themephoto"), createEvent);
 
 router.get("/", listAllEvents);
 router.get("/e/:eventId", getEvent);
