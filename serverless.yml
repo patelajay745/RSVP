@@ -4,6 +4,11 @@ frameworkVersion: "3"
 provider:
     name: aws
     runtime: nodejs18.x
+    iamRoleStatements:
+      - Effect: Allow
+        Action: 
+            - s3:*
+            - ses:*
     
 functions:
     api:

@@ -1,10 +1,12 @@
 // const {}=require()
 const { User } = require("../models/user.model");
+const { Verify } = require("../models/verify.model");
 const { asynHandler } = require("../utils/asyncHandler");
 const { ApiError } = require("../utils/ApiError");
 const { ApiResponse } = require("../utils/ApiResponse");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const AWS = require("aws-sdk");
 const generateAccessTokenAndRefreshToken = async (userId) => {
     try {
         const user = await User.findById(userId);
@@ -20,6 +22,8 @@ const generateAccessTokenAndRefreshToken = async (userId) => {
         throw new ApiError(500, "Something went wrong while generating tokens");
     }
 };
+
+const SES = new AWS.SES();
 
 const registerUser = asynHandler(async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
@@ -43,6 +47,42 @@ const registerUser = asynHandler(async (req, res) => {
         email,
         password,
     });
+
+    //verification process
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const verify = await Verify.create({
+        user: user._id,
+        code,
+        expiry: Date.now() + 3600000,
+    });
+
+    const data = `Hi ${firstName},
+
+Thank you for registering! Before we finalize your RSVP, please confirm your email address by entering the verification code below:
+
+Your Confirmation Code:
+${code}
+
+Please enter this code in the app/website to verify your email.`;
+
+    const params = {
+        Destination: {
+            ToAddresses: ["virangipatel2891@gmail.com"],
+        },
+        Message: {
+            Body: {
+                Text: {
+                    Data: data,
+                },
+            },
+            Subject: { Data: "RSVP Confirmation Code" },
+        },
+        Source: "patel.ajay745@gmail.com",
+    };
+
+    const response = await SES.sendEmail(params).promise();
+
+    console.log(response);
 
     user = user.toObject();
     delete user.password;
