@@ -8,6 +8,7 @@ const {
     refreshAccessToken,
     changeCurrentPassword,
     getCurrentUser,
+    verifyEmail,
 } = require("../controller/user.controller");
 
 router.post("/", registerUser);
@@ -18,6 +19,7 @@ router.post("/refresh-token", refreshAccessToken);
 router.use(verifyJWt);
 router.post("/logout", logoutUser);
 router.get("/", getCurrentUser);
+router.post("/", verifyEmail);
 router.post("/change-password", changeCurrentPassword);
 
 module.exports = router;

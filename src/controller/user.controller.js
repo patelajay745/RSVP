@@ -67,7 +67,8 @@ Please enter this code in the app/website to verify your email.`;
 
     const params = {
         Destination: {
-            ToAddresses: ["virangipatel2891@gmail.com"],
+            // ToAddresses: ["virangipatel2891@gmail.com"],
+            ToAddresses: email,
         },
         Message: {
             Body: {
@@ -237,6 +238,16 @@ const changeCurrentPassword = asynHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "Password has been updated"));
 });
 
+const verifyEmail = asynHandler(async (req, res) => {
+    //deconstruct userId and code
+    //find latest entry using userId from verify collection
+    // check if it is expired or not, if expired then tell them to request new one
+    // check code is right if not then send error
+    // if it is right then update user table and send 200 code as response.
+    const { code } = req.body;
+    const userId = req.user._id;
+});
+
 module.exports = {
     registerUser,
     loginUser,
@@ -244,4 +255,5 @@ module.exports = {
     changeCurrentPassword,
     refreshAccessToken,
     getCurrentUser,
+    verifyEmail,
 };
