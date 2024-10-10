@@ -7,6 +7,12 @@ provider:
     name: aws
     runtime: nodejs18.x
     profile: ajay
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - s3:*
+              - ses:*
+          Resource: "*"
 
 plugins:
     - serverless-offline
@@ -21,10 +27,24 @@ functions:
                   method: GET
                   cors: true
     UserCreate:
-        handler: handlers/user/userCreate.handler
+        handler: handlers/user/register.handler
         events:
             - http:
                   path: /user
+                  method: POST
+                  cors: true
+    UserLogin:
+        handler: handlers/user/login.handler
+        events:
+            - http:
+                  path: /login
+                  method: POST
+                  cors: true
+    UserLogout:
+        handler: handlers/user/logout.handler
+        events:
+            - http:
+                  path: /logout
                   method: POST
                   cors: true
 
