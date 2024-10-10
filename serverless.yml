@@ -1,21 +1,36 @@
+org: ajaypatel
+app: rsvp
 service: rsvp
 frameworkVersion: "3"
 
 provider:
     name: aws
     runtime: nodejs18.x
-    iamRoleStatements:
-      - Effect: Allow
-        Action: 
-            - s3:*
-            - ses:*
-    
-functions:
-    api:
-        handler: src/index.handler
-        events:
-            - httpApi: "*"
+    profile: ajay
 
 plugins:
     - serverless-offline
     - serverless-dotenv-plugin
+
+functions:
+    welcome:
+        handler: index.handler
+        events:
+            - http:
+                  path: /healthcheck
+                  method: GET
+                  cors: true
+    UserCreate:
+        handler: handlers/user/userCreate.handler
+        events:
+            - http:
+                  path: /user
+                  method: POST
+                  cors: true
+
+resources:
+    Resources:
+        MyBucket:
+            Type: AWS::S3::Bucket
+            Properties:
+                BucketName: myrsvp-bucket
