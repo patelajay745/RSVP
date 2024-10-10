@@ -7,16 +7,13 @@ provider:
     name: aws
     runtime: nodejs18.x
     profile: ajay
-    iamRoleStatements:
-        - Effect: Allow
-          Action:
-              - s3:*
-              - ses:*
-          Resource: "*"
+    logs:
+        http: false
 
 plugins:
     - serverless-offline
     - serverless-dotenv-plugin
+    - serverless-middleware
 
 functions:
     welcome:
@@ -42,15 +39,17 @@ functions:
                   cors: true
     UserLogout:
         handler: handlers/user/logout.handler
+        middleware:
+            pre:
+                - middleware/auth.authenticate
         events:
             - http:
                   path: /logout
                   method: POST
                   cors: true
-
-resources:
-    Resources:
-        MyBucket:
-            Type: AWS::S3::Bucket
-            Properties:
-                BucketName: myrsvp-bucket
+# resources:
+#     Resources:
+#         MyBucket:
+#             Type: AWS::S3::Bucket
+#             Properties:
+#                 BucketName: myrsvp-bucket
