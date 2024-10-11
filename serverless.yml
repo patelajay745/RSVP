@@ -1,14 +1,14 @@
 org: ajaypatel
 app: rsvp
 service: rsvp
-frameworkVersion: "3"
+frameworkVersion: "4"
 
 provider:
     name: aws
     runtime: nodejs18.x
     profile: ajay
     logs:
-        http: false
+        http: true
 
 plugins:
     - serverless-offline

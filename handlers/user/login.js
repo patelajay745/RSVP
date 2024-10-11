@@ -29,20 +29,20 @@ module.exports.handler = async (event) => {
     const { email, password } = parsedBody;
 
     if ([email, password].some((field) => (field || "").trim() == "")) {
-        throw new ApiResponse(400, "Please provide Email and Password");
+        return new ApiResponse(400, "Please provide Email and Password");
     }
 
     //find user
     let user = await User.findOne({ email });
     if (!user) {
-        throw new ApiResponse(400, "User is not found with this emailId");
+        return new ApiResponse(400, "User is not found with this emailId");
     }
     console.log(user);
 
     //check password
     const isPasswordValid = await user.isPasswordCorrect(password);
     if (!isPasswordValid) {
-        throw new ApiResponse(400, "Password is wrong");
+        return new ApiResponse(400, "Password is wrong");
     }
 
     //request for new accessToken
@@ -55,7 +55,7 @@ module.exports.handler = async (event) => {
     delete user.__v;
     delete user.password;
 
-    throw new ApiResponse(
+    return new ApiResponse(
         200,
         "User logged in successfully",
         {
@@ -64,10 +64,9 @@ module.exports.handler = async (event) => {
             refreshToken,
         },
         {
-            "Set-Cookie": [
-                `accessToken=${accessToken}; HttpOnly; Path=/;`,
-                `refreshToken=${refreshToken}; HttpOnly; Path=/;`,
-            ],
+            Location: "/",
+            "Set-Cookie": `accessToken=${accessToken}; Secure; HttpOnly; SameSite=Lax; Path=/`,
+            "Set-Cookie": `refreshToken=${refreshToken}; Secure; HttpOnly; SameSite=Lax; Path=/`,
         }
     );
 };
