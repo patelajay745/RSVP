@@ -18,12 +18,12 @@ module.exports.handler = async (event) => {
             (field) => (field || "").trim() === ""
         )
     ) {
-        throw new ApiResponse(400, "All fields are required");
+        return new ApiResponse(400, "All fields are required");
     }
 
     const existedUser = await User.findOne({ email });
     if (existedUser) {
-        throw new ApiResponse(400, "This email id is already registered");
+        return new ApiResponse(400, "This email id is already registered");
     }
 
     let user = await User.create({
@@ -53,7 +53,7 @@ Please enter this code in the app/website to verify your email.`;
     const params = {
         Destination: {
             // ToAddresses: ["virangipatel2891@gmail.com"],
-            ToAddresses: email,
+            ToAddresses: [email],
         },
         Message: {
             Body: {
@@ -66,7 +66,7 @@ Please enter this code in the app/website to verify your email.`;
         Source: "patel.ajay745@gmail.com",
     };
 
-    // const response = await SES.sendEmail(params).promise();
+    const response = await SES.sendEmail(params).promise();
 
     user = user.toObject();
     delete user.password;
@@ -75,8 +75,8 @@ Please enter this code in the app/website to verify your email.`;
     delete user.__v;
 
     if (!user) {
-        throw new ApiResponse(500, "Problem in registering user");
+        return new ApiResponse(500, "Problem in registering user");
     }
 
-    throw new ApiResponse(201, "User Registered", user);
+    return new ApiResponse(201, "User Registered", user);
 };
