@@ -63,10 +63,12 @@ module.exports.handler = async (event) => {
             accessToken,
             refreshToken,
         },
+        null,
         {
-            Location: "/",
-            "Set-Cookie": `accessToken=${accessToken}; Secure; HttpOnly; SameSite=Lax; Path=/`,
-            "Set-Cookie": `refreshToken=${refreshToken}; Secure; HttpOnly; SameSite=Lax; Path=/`,
+            "Set-cookie": [
+                `refreshToken=${refreshToken};Secure;HttpOnly;SameSite=Lax;Path=/`,
+                `accessToken=${accessToken}; Secure; HttpOnly; SameSite=Lax; Path=/`,
+            ],
         }
     );
 };
