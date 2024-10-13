@@ -14,6 +14,7 @@
         "multer-s3": "^3.0.1",
         "nanoid": "^3.3.4",
         "serverless": "^4.4.5",
+        "serverless-domain-manager": "^7.4.0",
         "serverless-dotenv-plugin": "^6.0.0",
         "serverless-http": "^3.1.1",
         "serverless-middleware": "^3.3.0"

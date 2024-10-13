@@ -7,6 +7,12 @@ provider:
     name: aws
     runtime: nodejs18.x
     profile: ajay
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - s3:*
+              - ses:*
+          Resource: "*"
     logs:
         http: true
 
@@ -14,6 +20,15 @@ plugins:
     - serverless-offline
     - serverless-dotenv-plugin
     - serverless-middleware
+
+custom:
+    customDomain:
+        domainName: rsvp-backend.ajayproject.com
+        basePath: ""
+        stage: dev
+        createRoute53Records: true
+        endpointType: regional
+        apiType: http
 
 functions:
     welcome:
@@ -47,9 +62,3 @@ functions:
                   path: /logout
                   method: POST
                   cors: true
-# resources:
-#     Resources:
-#         MyBucket:
-#             Type: AWS::S3::Bucket
-#             Properties:
-#                 BucketName: myrsvp-bucket
