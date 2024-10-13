@@ -20,6 +20,7 @@ plugins:
     - serverless-offline
     - serverless-dotenv-plugin
     - serverless-middleware
+    - serverless-domain-manager
 
 custom:
     customDomain:
@@ -27,8 +28,6 @@ custom:
         basePath: ""
         stage: dev
         createRoute53Records: true
-        endpointType: regional
-        apiType: http
 
 functions:
     welcome:
