@@ -3,10 +3,9 @@ const { ApiResponse } = require("../../utils/ApiResponse");
 
 module.exports.handler = async (event, context) => {
     // console.log("context value", context);
-    console.log("context value", context.user._id);
 
+    // console.log("context value", context.user._id);
     const userId = context.user._id;
-
     await User.findByIdAndUpdate(
         userId,
         {
@@ -18,7 +17,6 @@ module.exports.handler = async (event, context) => {
             new: true,
         }
     );
-
     return new ApiResponse(200, "user logged out", null, null, {
         "Set-cookie": [
             `refreshToken=;Secure;HttpOnly;SameSite=Lax;Path=/`,

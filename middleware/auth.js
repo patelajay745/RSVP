@@ -7,6 +7,7 @@ connectDb(process.env.MONGODB_URI);
 
 module.exports.authenticate = async (event, context) => {
     const cookies = event.headers.Cookie;
+
     let accessToken;
     if (cookies) {
         const cookieArray = cookies.split(";");
@@ -25,16 +26,20 @@ module.exports.authenticate = async (event, context) => {
     const token = accessToken || tokenFromHeader;
 
     if (!token) {
-        throw new ApiResponse(401, "Unauthorized request");
+        context.end();
+        return new ApiResponse(401, "Unauthorized request");
     }
 
     const decodeToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    console.log("decodeToken", decodeToken);
     const user = await User.findOne({ _id: decodeToken._id }).select(
         "-password -__v -createdAt -updatedAt"
     );
 
     if (!user) {
-        throw new ApiResponse(401, "invalid Token");
+        context.end();
+        return new ApiResponse(400, "Invalid Token");
     }
 
     context.user = user;
