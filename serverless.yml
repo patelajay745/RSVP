@@ -96,3 +96,13 @@ functions:
                   path: /event/{shortUrl}
                   method: GET
                   cors: true
+    UpdateEvent:
+        handler: handlers/event/updateEvent.handler
+        middleware:
+            pre:
+                - middleware/auth.authenticate
+        events:
+            - http:
+                  path: /event/{eventId}
+                  method: PATCH
+                  cors: true
