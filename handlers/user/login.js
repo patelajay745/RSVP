@@ -21,7 +21,6 @@ module.exports.handler = async (event) => {
     if (!user) {
         return new ApiResponse(400, "User is not found with this emailId");
     }
-    console.log(user);
 
     //check password
     const isPasswordValid = await user.isPasswordCorrect(password);

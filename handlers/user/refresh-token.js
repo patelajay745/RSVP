@@ -47,8 +47,6 @@ module.exports.handler = async (event, context) => {
 
     const { accessToken, refreshToken } =
         await generateAccessTokenAndRefreshToken(user._id);
-    console.log("accessToken", accessToken);
-    console.log("newRefreshToken", refreshToken);
 
     return new ApiResponse(
         200,
