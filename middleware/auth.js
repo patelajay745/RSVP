@@ -32,9 +32,8 @@ module.exports.authenticate = async (event, context) => {
 
     const decodeToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
-    console.log("decodeToken", decodeToken);
     const user = await User.findOne({ _id: decodeToken._id }).select(
-        "-password -__v -createdAt -updatedAt"
+        "-password -__v -createdAt -updatedAt -refreshToken"
     );
 
     if (!user) {

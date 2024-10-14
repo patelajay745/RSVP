@@ -44,6 +44,16 @@ functions:
                   path: /user
                   method: POST
                   cors: true
+    GetUser:
+        handler: handlers/user/user.handler
+        middleware:
+            pre:
+                - middleware/auth.authenticate
+        events:
+            - http:
+                  path: /user
+                  method: GET
+                  cors: true
     UserLogin:
         handler: handlers/user/login.handler
         events:
