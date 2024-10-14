@@ -4,7 +4,6 @@ const { ApiResponse } = require("../../utils/ApiResponse");
 module.exports.handler = async (event, context) => {
     // console.log("context value", context);
 
-    // console.log("context value", context.user._id);
     const userId = context.user._id;
     await User.findByIdAndUpdate(
         userId,

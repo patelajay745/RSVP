@@ -54,6 +54,13 @@ functions:
                   path: /user
                   method: GET
                   cors: true
+    RefreshToken:
+        handler: handlers/user/refresh-token.handler
+        events:
+            - http:
+                  path: /refresh-token
+                  method: POST
+                  cors: true
     UserLogin:
         handler: handlers/user/login.handler
         events:
