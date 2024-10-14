@@ -34,7 +34,7 @@ functions:
         handler: index.handler
         events:
             - http:
-                  path: /healthcheck
+                  path: /
                   method: GET
                   cors: true
     UserCreate:
@@ -87,4 +87,12 @@ functions:
             - http:
                   path: /logout
                   method: POST
+                  cors: true
+
+    HitUrl:
+        handler: handlers/event/hitUrl.handler
+        events:
+            - http:
+                  path: /event/{shortUrl}
+                  method: GET
                   cors: true
