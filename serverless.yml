@@ -93,7 +93,7 @@ functions:
         handler: handlers/event/hitUrl.handler
         events:
             - http:
-                  path: /event/{shortUrl}
+                  path: /event/u/{shortUrl}
                   method: GET
                   cors: true
     UpdateEvent:
@@ -105,4 +105,14 @@ functions:
             - http:
                   path: /event/{eventId}
                   method: PATCH
+                  cors: true
+    GetAEvent:
+        handler: handlers/event/getAEvent.handler
+        middleware:
+            pre:
+                - middleware/auth.authenticate
+        events:
+            - http:
+                  path: /event/e/{eventId}
+                  method: GET
                   cors: true
