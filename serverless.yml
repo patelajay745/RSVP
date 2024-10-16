@@ -164,3 +164,13 @@ functions:
                   path: /family
                   method: POST
                   cors: true
+    DeleteRSVP:
+        handler: handlers/event/deleteRSVP.handler
+        middleware:
+            pre:
+                - middleware/auth.authenticate
+        events:
+            - http:
+                  path: /family/{eventId}/{familyId}
+                  method: DELETE
+                  cors: true
