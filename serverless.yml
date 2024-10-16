@@ -146,3 +146,21 @@ functions:
                   path: /event/e/{eventId}
                   method: PATCH
                   cors: true
+    DeleteEvent:
+        handler: handlers/event/deleteEvent.handler
+        middleware:
+            pre:
+                - middleware/auth.authenticate
+        events:
+            - http:
+                  path: /event/{eventId}
+                  method: DELETE
+                  cors: true
+
+    CreateRSVP:
+        handler: handlers/event/createRSVP.handler
+        events:
+            - http:
+                  path: /family
+                  method: POST
+                  cors: true
