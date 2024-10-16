@@ -126,3 +126,13 @@ functions:
                   path: /event/f/{eventId}
                   method: GET
                   cors: true
+    GetAllEvents:
+        handler: handlers/event/getAllEvents.handler
+        middleware:
+            pre:
+                - middleware/auth.authenticate
+        events:
+            - http:
+                  path: /event
+                  method: GET
+                  cors: true
