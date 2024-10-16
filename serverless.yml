@@ -136,3 +136,13 @@ functions:
                   path: /event
                   method: GET
                   cors: true
+    ToggleEvent:
+        handler: handlers/event/toggleEvent.handler
+        middleware:
+            pre:
+                - middleware/auth.authenticate
+        events:
+            - http:
+                  path: /event/e/{eventId}
+                  method: PATCH
+                  cors: true
