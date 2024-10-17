@@ -174,3 +174,14 @@ functions:
                   path: /family/{eventId}/{familyId}
                   method: DELETE
                   cors: true
+
+    GenerateOTP:
+        handler: handlers/user/sendConfirmMail.handler
+        middleware:
+            pre:
+                - middleware/auth.authenticate
+        events:
+            - http:
+                  path: /user/sendEmail
+                  method: POST
+                  cors: true

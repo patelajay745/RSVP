@@ -10,7 +10,7 @@ connectDb(process.env.MONGODB_URI);
 module.exports.handler = async (event) => {
     
     const parsedBody = JSON.parse(event.body);
-    console.log(parsedBody);
+    
 
     const { eventId, firstName, lastName, email, numAttendees, attendees } =
         parsedBody;
