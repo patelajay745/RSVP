@@ -185,3 +185,13 @@ functions:
                   path: /user/sendEmail
                   method: POST
                   cors: true
+    verifyEmail:
+        handler: handlers/user/verifyEmail.handler    
+        middleware:
+            pre:
+                - middleware/auth.authenticate
+        events:
+            - http:
+                  path: /user/verifyEmail
+                  method: POST
+                  cors: true

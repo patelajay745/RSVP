@@ -21,7 +21,7 @@ module.exports.handler = async (event, context) => {
 
     const data = `Hi ${context.user.firstName},
 
-Thank you for registering! Before we finalize your RSVP, please confirm your email address by entering the verification code below:
+Please confirm your email address by entering the verification code below:
 
 Your Confirmation Code:
 ${code}
