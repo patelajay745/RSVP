@@ -7,12 +7,16 @@ provider:
     name: aws
     runtime: nodejs18.x
     profile: ajay
+    apiGateway:
+        binaryMediaTypes:
+            - "*/*"
     iamRoleStatements:
         - Effect: Allow
           Action:
               - s3:*
               - ses:*
-          Resource: "*"
+          Resource:
+              - "arn:aws:s3:::rsvp-uploadphoto/*"
     logs:
         http: true
 

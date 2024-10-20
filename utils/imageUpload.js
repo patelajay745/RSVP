@@ -1,31 +1,26 @@
 const AWS = require("aws-sdk");
 
-AWS.config.update({
-    accessKeyId: process.env.AWS_ACCESSKEYID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESSKEY,
-    region: process.env.AWS_REGION,
-});
-
 const s3 = new AWS.S3();
 const { nanoid } = require("nanoid");
 const ID = nanoid();
 
 const uploadOnS3 = (file) => {
-    let themephoto = null;
+    const fileObject = file[0];
 
-    if (!file) {
-        return { err: null, themephoto };
+    if (!fileObject) {
+        return { err: null, themephoto: null };
     }
 
-    const fileExtension = file.originalname.split(".").pop();
+    const fileExtension = fileObject.filename.split(".").pop();
     const newKey = `${ID}.${fileExtension}`;
 
     const params = {
-        Bucket: process.env.AWS_BUCKETNAME,
+        Bucket: process.env.AWS_BUCKETNAME + "/rsvp",
         Key: newKey,
-        Body: file.buffer,
-        ContentType: file.mimetype,
+        Body: fileObject.content,
+        ContentType: fileObject.contentType,
     };
+
     return new Promise((resolve, reject) => {
         s3.upload(params, (err, data) => {
             if (err) {
