@@ -30,7 +30,13 @@ module.exports.authenticate = async (event, context) => {
         return new ApiResponse(401, "Unauthorized request");
     }
 
-    const decodeToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    let decodeToken;
+    try {
+        decodeToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    } catch (error) {
+        context.end();
+        return new ApiResponse(401, "Invalid token");
+    }
 
     const user = await User.findOne({ _id: decodeToken._id }).select(
         "-password -__v -createdAt -updatedAt -refreshToken"
@@ -38,7 +44,7 @@ module.exports.authenticate = async (event, context) => {
 
     if (!user) {
         context.end();
-        return new ApiResponse(400, "Invalid Token");
+        return new ApiResponse(401, "Invalid user");
     }
 
     context.user = user;

@@ -186,12 +186,22 @@ functions:
                   method: POST
                   cors: true
     verifyEmail:
-        handler: handlers/user/verifyEmail.handler    
+        handler: handlers/user/verifyEmail.handler
         middleware:
             pre:
                 - middleware/auth.authenticate
         events:
             - http:
                   path: /user/verifyEmail
+                  method: POST
+                  cors: true
+    CreateEvent:
+        handler: handlers/event/createEvent.handler
+        middleware:
+            pre:
+                - middleware/auth.authenticate
+        events:
+            - http:
+                  path: /event
                   method: POST
                   cors: true

@@ -1,6 +1,7 @@
 const { ApiResponse } = require("../../utils/ApiResponse");
 const connectDb = require("../../db");
 const { Event } = require("../../models/event.model");
+
 const { Family } = require("../../models/family.model");
 const querystring = require("querystring");
 const { RSVPGuest } = require("../../models/rsvpguest.model");
@@ -10,6 +11,8 @@ connectDb(process.env.MONGODB_URI);
 module.exports.handler = async (event) => {
     
     const parsedBody = JSON.parse(event.body);
+
+    
     
 
     const { eventId, firstName, lastName, email, numAttendees, attendees } =
