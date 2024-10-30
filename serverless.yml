@@ -7,6 +7,20 @@ provider:
     name: aws
     runtime: nodejs18.x
     profile: ajay
+    httpApi:
+        cors:
+            allowedOrigins:
+                - http://localhost:5173
+            allowedHeaders:
+                - Content-Type
+                - Authorization
+            allowCredentials: true
+            allowedMethods:
+                - GET
+                - POST
+                - PUT
+                - DELETE
+                - OPTIONS
     apiGateway:
         binaryMediaTypes:
             - "image/png"

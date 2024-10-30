@@ -17,9 +17,9 @@ module.exports.handler = async (event, context) => {
         }
     );
     return new ApiResponse(200, "user logged out", null, null, {
-        "Set-cookie": [
-            `refreshToken=;Secure;HttpOnly;SameSite=Lax;Path=/`,
-            `accessToken=; Secure; HttpOnly; SameSite=Lax; Path=/`,
+        "Set-Cookie": [
+            "refreshToken=; Secure; HttpOnly; SameSite=None; Path=/; Max-Age=0",
+            "accessToken=; Secure; HttpOnly; SameSite=None; Path=/; Max-Age=0",
         ],
     });
 };

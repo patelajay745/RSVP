@@ -48,9 +48,9 @@ module.exports.handler = async (event) => {
         },
         null,
         {
-            "Set-cookie": [
-                `refreshToken=${refreshToken};Secure;HttpOnly;SameSite=Lax;Path=/`,
-                `accessToken=${accessToken}; Secure; HttpOnly; SameSite=Lax; Path=/`,
+            "Set-Cookie": [
+                `refreshToken=${refreshToken}; Secure; HttpOnly; SameSite=None; Path=/`, // 7 days
+                `accessToken=${accessToken}; Secure; HttpOnly; SameSite=None; Path=/`, // 15 minutes
             ],
         }
     );
