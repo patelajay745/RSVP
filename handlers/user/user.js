@@ -1,5 +1,9 @@
 const { ApiResponse } = require("../../utils/ApiResponse");
 
 module.exports.handler = async (event, context) => {
-    return new ApiResponse(200, "Current User Fetched", context.user);
+    const user = context.user;
+    return new ApiResponse(200, "Current User Fetched", {
+        user,
+        code: "TOKEN_VALID",
+    });
 };

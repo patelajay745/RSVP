@@ -5,6 +5,13 @@ const connectDb = require("../db");
 
 connectDb(process.env.MONGODB_URI);
 
+const ERROR_TYPES = {
+    EXPIRED: "TOKEN_EXPIRED",
+    INVALID: "TOKEN_INVALID",
+    MISSING: "TOKEN_MISSING",
+    USERNOTFOUND: "USER_NOT_FOUND",
+};
+
 module.exports.authenticate = async (event, context) => {
     const cookies = event.headers.Cookie;
 
@@ -27,7 +34,9 @@ module.exports.authenticate = async (event, context) => {
 
     if (!token) {
         context.end();
-        return new ApiResponse(401, "Unauthorized request");
+        return new ApiResponse(401, "Unauthorized request", {
+            code: ERROR_TYPES.MISSING,
+        });
     }
 
     let decodeToken;
@@ -35,7 +44,16 @@ module.exports.authenticate = async (event, context) => {
         decodeToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     } catch (error) {
         context.end();
-        return new ApiResponse(401, "Invalid token");
+
+        if (error.name === "TokenExpiredError") {
+            return new ApiResponse(401, "Token expired", {
+                code: ERROR_TYPES.EXPIRED,
+            });
+        }
+
+        return new ApiResponse(401, "Invalid token", {
+            code: ERROR_TYPES.INVALID,
+        });
     }
 
     const user = await User.findOne({ _id: decodeToken._id }).select(
@@ -44,7 +62,9 @@ module.exports.authenticate = async (event, context) => {
 
     if (!user) {
         context.end();
-        return new ApiResponse(401, "Invalid user");
+        return new ApiResponse(401, "Invalid user", {
+            code: ERROR_TYPES.USERNOTFOUND,
+        });
     }
 
     context.user = user;

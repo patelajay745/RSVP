@@ -13,8 +13,6 @@ module.exports.handler = async (event) => {
     const parsedBody = querystring.parse(event.body);
     const { firstName, lastName, email, password } = parsedBody;
 
-    console.log(parsedBody);
-
     if (
         [firstName, lastName, email, password].some(
             (field) => (field || "").trim() === ""

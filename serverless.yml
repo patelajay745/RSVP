@@ -50,14 +50,14 @@ functions:
                   path: /user
                   method: POST
                   cors: true
-    GetUser:
+    VerifyUser:
         handler: handlers/user/user.handler
         middleware:
             pre:
                 - middleware/auth.authenticate
         events:
             - http:
-                  path: /user
+                  path: /verify
                   method: GET
                   cors: true
     RefreshToken:
