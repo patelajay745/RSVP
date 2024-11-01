@@ -13,7 +13,7 @@ const ERROR_TYPES = {
 };
 
 module.exports.authenticate = async (event, context) => {
-    const cookies = event.headers.cookie;
+    const cookies = event.headers.cookie || event.headers.Cookie;
 
     console.log("Headers:", event.headers); // Debug headers
     console.log("Cookies:", event.headers.cookie); // Debug cookies

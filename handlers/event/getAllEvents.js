@@ -12,5 +12,5 @@ module.exports.handler = async (event, context) => {
         return new ApiResponse(400, "No Events found");
     }
 
-    return new ApiResponse(200, requestedEvents, "Events are fetched");
+    return new ApiResponse(200, "Events are fetched", requestedEvents);
 };
