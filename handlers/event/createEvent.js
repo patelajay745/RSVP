@@ -7,6 +7,7 @@ const connectDb = require("../../db");
 connectDb(process.env.MONGODB_URI);
 
 module.exports.handler = async (event, context) => {
+    console.log(event);
     if (!context.user.confirmed) {
         return new ApiResponse(200, "Please confirm email id to create event");
     }
