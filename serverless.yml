@@ -34,7 +34,7 @@ provider:
               - "arn:aws:s3:::rsvp-uploadphoto/*"
               - "*"
     logs:
-        http: true
+        http: false
 
 plugins:
     - serverless-offline
