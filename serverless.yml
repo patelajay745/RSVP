@@ -6,6 +6,8 @@ frameworkVersion: "4"
 provider:
     name: aws
     runtime: nodejs18.x
+    logs:
+        http: false
     profile: ajay
     httpApi:
         cors:
@@ -23,8 +25,9 @@ provider:
                 - OPTIONS
     apiGateway:
         binaryMediaTypes:
-            - "image/png"
-            - ‘image/jpeg’
+            # - "multipart/form-data"
+            - "image/*"
+            # - "*/*"
     iamRoleStatements:
         - Effect: Allow
           Action:
@@ -33,8 +36,6 @@ provider:
           Resource:
               - "arn:aws:s3:::rsvp-uploadphoto/*"
               - "*"
-    logs:
-        http: false
 
 plugins:
     - serverless-offline

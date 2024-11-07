@@ -7,11 +7,18 @@ const connectDb = require("../../db");
 connectDb(process.env.MONGODB_URI);
 
 module.exports.handler = async (event, context) => {
-    console.log(event);
+    // console.log("Eventssssss", event);
     if (!context.user.confirmed) {
         return new ApiResponse(200, "Please confirm email id to create event");
     }
     try {
+        console.log("Received event:", {
+            headers: event.headers,
+            contentType:
+                event.headers["Content-Type"] || event.headers["content-type"],
+            bodyLength: event.body?.length,
+        });
+        
         const result = await parser.parse(event);
 
         const {
@@ -41,6 +48,8 @@ module.exports.handler = async (event, context) => {
         }
 
         const { err, themephoto } = await uploadOnS3(result.files);
+
+        // Console.log(themephoto);
 
         if (err) {
             return new ApiResponse(
