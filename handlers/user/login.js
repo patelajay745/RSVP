@@ -33,7 +33,6 @@ module.exports.handler = async (event) => {
         await generateAccessTokenAndRefreshToken(user._id);
 
     user = user.toObject();
-    delete user.createdAt;
     delete user.updatedAt;
     delete user.__v;
     delete user.password;
