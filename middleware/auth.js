@@ -12,6 +12,13 @@ const ERROR_TYPES = {
     USERNOTFOUND: "USER_NOT_FOUND",
 };
 
+const clearAuthCookies = () => ({
+    "Set-Cookie": [
+        "refreshToken=; Secure; HttpOnly; SameSite=None; Path=/; Max-Age=0",
+        "accessToken=; Secure; HttpOnly; SameSite=None; Path=/; Max-Age=0",
+    ],
+});
+
 module.exports.authenticate = async (event, context) => {
     const cookies = event.headers.cookie || event.headers.Cookie;
 
@@ -49,14 +56,26 @@ module.exports.authenticate = async (event, context) => {
         context.end();
 
         if (error.name === "TokenExpiredError") {
-            return new ApiResponse(401, "Token expired", {
-                code: ERROR_TYPES.EXPIRED,
-            });
+            return new ApiResponse(
+                401,
+                "Token expired",
+                {
+                    code: ERROR_TYPES.EXPIRED,
+                },
+                null,
+                clearAuthCookies()
+            );
         }
 
-        return new ApiResponse(401, "Invalid token", {
-            code: ERROR_TYPES.INVALID,
-        });
+        return new ApiResponse(
+            401,
+            "Invalid token",
+            {
+                code: ERROR_TYPES.INVALID,
+            },
+            null,
+            clearAuthCookies()
+        );
     }
 
     const user = await User.findOne({ _id: decodeToken._id }).select(
